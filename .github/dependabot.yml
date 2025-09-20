@@ -3,8 +3,9 @@ updates:
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
-      interval: "daily"
-      time: "01:30"
+      interval: "weekly"
+      day: "sunday"
+      time: "02:00"
       timezone: "Asia/Karachi"
     open-pull-requests-limit: 5
     reviewers:
@@ -14,7 +15,6 @@ updates:
       include: "scope"
     labels:
       - "dependencies"
-      - "automated"
     groups:
       spring-boot:
         patterns:
