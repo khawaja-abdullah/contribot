@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.6</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>org.voninc</groupId>
 	<artifactId>contribot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>contribot</name>
-	<description>contribot</description>
-	<url/>
+	<description>GitHub Good-First-Issue notifier bot</description>
+	<url>https://github.com/khawaja-abdullah/contribot</url>
 	<licenses>
-		<license/>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		</license>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<id>khawaja-abdullah</id>
+			<name>Khawaja Abdullah</name>
+			<email>khawaja.abdullah.ansar@gmail.com</email>
+		</developer>
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+		<connection>scm:git:git://github.com/khawaja-abdullah/contribot.git</connection>
+		<developerConnection>scm:git:ssh://github.com/khawaja-abdullah/contribot.git</developerConnection>
+		<url>https://github.com/khawaja-abdullah/contribot</url>
+		<tag>HEAD</tag>
 	</scm>
 	<properties>
 		<java.version>25</java.version>
@@ -44,6 +52,33 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>4.5</version>
+				<configuration>
+					<strictCheck>true</strictCheck>
+					<licenseSets>
+						<licenseSet>
+							<header>src/license-header.txt</header>
+							<includes>
+								<include>**/*.java</include>
+							</includes>
+							<properties>
+								<year>2025</year>
+								<name>Von Inc</name>
+							</properties>
+						</licenseSet>
+					</licenseSets>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
