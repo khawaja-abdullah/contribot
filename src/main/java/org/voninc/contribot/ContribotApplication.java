@@ -15,14 +15,33 @@
  */
 package org.voninc.contribot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.voninc.contribot.service.GitHubIssueSearchService;
 
 @SpringBootApplication
-public class ContribotApplication {
+public class ContribotApplication implements CommandLineRunner {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ContribotApplication.class);
+
+  private final GitHubIssueSearchService gitHubIssueSearchService;
+
+  @Autowired
+  public ContribotApplication(GitHubIssueSearchService gitHubIssueSearchService) {
+    this.gitHubIssueSearchService = gitHubIssueSearchService;
+  }
 
   public static void main(String[] args) {
     SpringApplication.run(ContribotApplication.class, args);
+  }
+
+  @Override
+  public void run(String... args) {
+    LOGGER.info("Total issues: {}", gitHubIssueSearchService.count());
   }
 
 }
