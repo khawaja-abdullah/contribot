@@ -9,7 +9,7 @@ Great for developers who want to discover “good first issues” or other contr
 - Configurable search query and polling interval.
 
 ## 🚀 Tech Stack
-- Java 25
+- Java 21
 - Spring Boot 3.5.6
 - Maven
 
