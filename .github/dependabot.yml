@@ -3,9 +3,9 @@ updates:
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "01:00"
+      interval: "daily"
+      time: "01:30"
+      timezone: "Asia/Karachi"
     open-pull-requests-limit: 5
     reviewers:
       - "khawaja-abdullah"
@@ -16,21 +16,20 @@ updates:
       - "dependencies"
       - "automated"
     groups:
-groups:
-  spring-boot:
-    patterns:
-      - "org.springframework.boot*"
-      - "org.springframework*"
-  testing:
-    patterns:
-      - "org.junit*"
-      - "org.mockito*"
-      - "org.testcontainers*"
-      - "org.assertj*"
-  jackson:
-    patterns:
-      - "com.fasterxml.jackson*"
-  hibernate:
-    patterns:
-      - "org.hibernate*"
-      - "jakarta.persistence*"
+      spring-boot:
+        patterns:
+          - "org.springframework.boot:*"
+          - "org.springframework:*"
+      testing:
+        patterns:
+          - "org.junit:*"
+          - "org.mockito:*"
+          - "org.testcontainers:*"
+          - "org.assertj:*"
+      jackson:
+        patterns:
+          - "com.fasterxml.jackson:*"
+      hibernate:
+        patterns:
+          - "org.hibernate:*"
+          - "jakarta.persistence:*"
