@@ -21,17 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.voninc.contribot.service.GitHubIssueSearchService;
+import org.voninc.contribot.service.GithubIssueSearchService;
 
 @SpringBootApplication
 public class ContribotApplication implements CommandLineRunner {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ContribotApplication.class);
 
-  private final GitHubIssueSearchService gitHubIssueSearchService;
+  private final GithubIssueSearchService gitHubIssueSearchService;
 
   @Autowired
-  public ContribotApplication(GitHubIssueSearchService gitHubIssueSearchService) {
+  public ContribotApplication(GithubIssueSearchService gitHubIssueSearchService) {
     this.gitHubIssueSearchService = gitHubIssueSearchService;
   }
 
