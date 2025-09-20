@@ -1,0 +1,35 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "02:00"
+      timezone: "Asia/Karachi"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "khawaja-abdullah"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+    groups:
+      spring-boot:
+        patterns:
+          - "org.springframework.boot:*"
+          - "org.springframework:*"
+      testing:
+        patterns:
+          - "org.junit:*"
+          - "org.mockito:*"
+          - "org.testcontainers:*"
+          - "org.assertj:*"
+      jackson:
+        patterns:
+          - "com.fasterxml.jackson:*"
+      hibernate:
+        patterns:
+          - "org.hibernate:*"
+          - "jakarta.persistence:*"
