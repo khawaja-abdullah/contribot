@@ -44,7 +44,7 @@ public class GithubClientConfig {
    */
   @Bean
   public GitHub gitHub() {
-    if (gitHubToken == null || gitHubToken.trim().isEmpty()) {
+    if (gitHubToken == null || gitHubToken.isBlank()) {
       throw new IllegalStateException("GitHub token is not configured. Set 'github.token' in application properties.");
     }
     try {
