@@ -17,6 +17,8 @@ package org.voninc.contribot.service;
 
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.voninc.contribot.dto.GitIssue;
@@ -34,6 +36,8 @@ import java.util.List;
  */
 @Service
 public class GithubService implements IGitProviderService {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(GithubService.class);
 
   private final GitHub gitHub;
 
@@ -65,6 +69,10 @@ public class GithubService implements IGitProviderService {
           .list()
           .forEach(ghIssue -> {
                 GHRepository ghRepository = ghIssue.getRepository();
+                if (ghRepository == null) {
+                  LOGGER.warn("Skipping issue with null repository: {}", ghIssue.getTitle());
+                  return;
+                }
                 gitIssues.add(
                     new GitIssue(
                         ghIssue.getTitle(),
