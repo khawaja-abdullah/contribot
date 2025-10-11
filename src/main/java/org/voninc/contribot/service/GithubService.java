@@ -67,6 +67,7 @@ public class GithubService implements IGitProviderService {
       gitHub.searchIssues()
           .q(query)
           .list()
+          .withPageSize(100) // TODO: make configurable later
           .forEach(ghIssue -> {
                 GHRepository ghRepository = ghIssue.getRepository();
                 if (ghRepository == null) {
