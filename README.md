@@ -1,12 +1,7 @@
 # Contribot
 
-Contribot is a lightweight Spring Boot utility that periodically checks GitHub for new open issues matching a configurable search string and notifies you.  
-Great for developers who want to discover “good first issues” or other contribution opportunities quickly.
-
-## ✨ Features (initial version)
-- Polls GitHub’s public REST API for issues matching a keyword.
-- Logs matching issues to the console (email/Slack/webhook support planned).
-- Configurable search query and polling interval.
+Contribot is a lightweight Spring Boot utility designed to help developers find open-source contribution opportunities. 
+It works by running a scheduled poll against public Git repositories (starting with GitHub) using your advanced search criteria, ensuring you get alerted to the freshest issues as soon as they are posted.
 
 ## 🚀 Tech Stack
 - Java 21
@@ -23,8 +18,8 @@ git clone https://github.com/khawaja-abdullah/contribot.git
 cd contribot
 
 # build and start the app
-mvn clean install
-mvn spring-boot:run
+./mvnw clean install -DskipTests
+./mvnw spring-boot:run
 ```
 
 ## 📜 License
