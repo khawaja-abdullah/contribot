@@ -17,6 +17,15 @@ package org.voninc.contribot.dto;
 
 import java.net.URL;
 
+/**
+ * A minimal, platform-agnostic Data Transfer Object (DTO) representing the essential metadata for a Git repository.
+ * This record provides the necessary context for where a {@link GitIssue} resides.
+ *
+ * @param ownerName The username or organization name that owns the repository (e.g., "khawaja-abdullah").
+ * @param repositoryName The short, unique name of the repository (e.g., "contribot").
+ * @param fullRepositoryName The combined owner and repository name (e.g., "khawaja-abdullah/contribot").
+ * @param url The base URL for the repository on the Git host platform.
+ */
 public record GitRepository(String ownerName, String repositoryName, String fullRepositoryName,
                             URL url) {
 }

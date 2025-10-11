@@ -19,13 +19,19 @@ import org.voninc.contribot.dto.GitIssue;
 
 import java.util.List;
 
+/**
+ * Defines the essential contract for all Git provider clients (adapters).
+ */
 public interface IGitProviderService {
 
   /**
-   * Finds issues matching the provider's native search query
+   * Finds open issues matching the provider's native search query.
+   * <p>
+   * Concrete implementations of this method are responsible for translating the common query string into the specific
+   * syntax required by the underlying platform's API and mapping the results to the standardized {@link GitIssue} DTO.
    *
    * @param query The provider-specific search string (e.g., GitHub's 'label:x is:open').
-   * @return A list of standardized GitIssue DTOs.
+   * @return A list of standardized {@link GitIssue} DTOs.
    */
   List<GitIssue> findIssues(String query);
 

@@ -23,12 +23,27 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 
+/**
+ * Configuration class responsible for setting up and providing the {@link org.kohsuke.github.GitHub} client bean.
+ * <p>
+ * This class uses an authenticated GitHub token (which could be a Fine-grained PAT, a Classic PAT, or a GitHub App
+ * Installation Access Token) from application properties to authenticate the client for making secure API calls.
+ */
 @Configuration
 public class GithubClientConfig {
 
   @Value("${github.token}")
   private String gitHubToken;
 
+  /**
+   * Creates and configures the core {@link org.kohsuke.github.GitHub} client bean.
+   * <p>
+   * It initializes the client using the configured OAuth token for authenticated access to the GitHub REST API.
+   *
+   * @return The configured GitHub client instance.
+   * @throws IOException If there is an error building the client (e.g., an invalid token
+   * format or connection issues).
+   */
   @Bean
   public GitHub gitHub() throws IOException {
     return new GitHubBuilder()

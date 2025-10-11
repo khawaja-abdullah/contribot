@@ -25,6 +25,12 @@ import org.voninc.contribot.dto.GitRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Concrete implementation of the {@link IGitProviderService} interface for the GitHub platform.
+ * <p>
+ * This class acts as an **Adapter**, translating the generic service contract into specific calls to the
+ * {@link org.kohsuke.github.GitHub} client.
+ */
 @Service
 public class GithubService implements IGitProviderService {
 
@@ -35,6 +41,20 @@ public class GithubService implements IGitProviderService {
     this.gitHub = gitHub;
   }
 
+  /**
+   * Executes a search against the GitHub Issues Search API using the provided query string.
+   * <p>
+   * It performs the following steps:
+   * <ul>
+   * <li>Passes the {@code query} directly to the GitHub API.</li>
+   * <li>Retrieves the list of matching {@code GHIssue} objects.</li>
+   * <li>Iterates through the results, converting each GitHub native object into a
+   * standardized {@link GitIssue} DTO.</li>
+   * </ul>
+   *
+   * @param query The GitHub-specific search string (e.g., {@code "label:\"good first issue\" is:open"}).
+   * @return A list of standardized {@link GitIssue} DTOs.
+   */
   @Override
   public List<GitIssue> findIssues(String query) {
     List<GitIssue> gitIssues = new ArrayList<>();

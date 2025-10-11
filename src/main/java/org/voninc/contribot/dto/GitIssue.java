@@ -17,5 +17,15 @@ package org.voninc.contribot.dto;
 
 import java.net.URL;
 
+/**
+ * A minimal, platform-agnostic Data Transfer Object (DTO) representing a Git issue.
+ * This record serves as the standardized contract for issue data returned by the
+ * {@link org.voninc.contribot.service.IGitProviderService} implementations.
+ *
+ * @param title The primary title or subject of the issue.
+ * @param body The main description content of the issue.
+ * @param url The direct, clickable URL to the issue on the host platform.
+ * @param gitRepository The repository context where the issue resides represented by {@link GitRepository}.
+ */
 public record GitIssue(String title, String body, URL url, GitRepository gitRepository) {
 }
