@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.voninc.contribot.dto.GitIssue;
 import org.voninc.contribot.dto.GitRepository;
+import org.voninc.contribot.exception.ContribotRuntimeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,26 +59,30 @@ public class GithubService implements IGitProviderService {
   @Override
   public List<GitIssue> findIssues(String query) {
     List<GitIssue> gitIssues = new ArrayList<>();
-    gitHub.searchIssues()
-        .q(query)
-        .list()
-        .forEach(ghIssue -> {
-              GHRepository ghRepository = ghIssue.getRepository();
-              gitIssues.add(
-                  new GitIssue(
-                      ghIssue.getTitle(),
-                      ghIssue.getBody(),
-                      ghIssue.getHtmlUrl(),
-                      new GitRepository(
-                          ghRepository.getOwnerName(),
-                          ghRepository.getName(),
-                          ghRepository.getFullName(),
-                          ghRepository.getHtmlUrl()
-                      )
-                  )
-              );
-            }
-        );
+    try {
+      gitHub.searchIssues()
+          .q(query)
+          .list()
+          .forEach(ghIssue -> {
+                GHRepository ghRepository = ghIssue.getRepository();
+                gitIssues.add(
+                    new GitIssue(
+                        ghIssue.getTitle(),
+                        ghIssue.getBody(),
+                        ghIssue.getHtmlUrl(),
+                        new GitRepository(
+                            ghRepository.getOwnerName(),
+                            ghRepository.getName(),
+                            ghRepository.getFullName(),
+                            ghRepository.getHtmlUrl()
+                        )
+                    )
+                );
+              }
+          );
+    } catch (Exception e) {
+      throw new ContribotRuntimeException("Failed to search GitHub issues with query: " + query, e);
+    }
     return gitIssues;
   }
 

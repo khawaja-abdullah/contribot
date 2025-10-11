@@ -20,6 +20,7 @@ import org.kohsuke.github.GitHubBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.voninc.contribot.exception.ContribotRuntimeException;
 
 import java.io.IOException;
 
@@ -47,16 +48,14 @@ public class GithubClientConfig {
   @Bean
   public GitHub gitHub() {
     if (gitHubToken == null || gitHubToken.isBlank()) {
-      throw new IllegalStateException(
-          "GitHub token is not configured. Set 'github.token' in application properties.");
+      throw new ContribotRuntimeException("GitHub token is not configured. Set 'github.token' in application properties.");
     }
     try {
       return new GitHubBuilder()
           .withOAuthToken(gitHubToken)
           .build();
     } catch (IOException e) {
-      throw new IllegalStateException(
-          "Failed to initialize GitHub client: " + e.getMessage(), e);
+      throw new ContribotRuntimeException("Failed to initialize GitHub client: " + e.getMessage(), e);
     }
   }
 
