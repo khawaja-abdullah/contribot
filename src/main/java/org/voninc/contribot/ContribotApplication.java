@@ -21,18 +21,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.voninc.contribot.service.GithubIssueSearchService;
+import org.voninc.contribot.dto.GitIssue;
+import org.voninc.contribot.service.IGitProviderService;
+
+import java.util.List;
 
 @SpringBootApplication
 public class ContribotApplication implements CommandLineRunner {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ContribotApplication.class);
 
-  private final GithubIssueSearchService gitHubIssueSearchService;
+  private final IGitProviderService gitProviderService;
 
   @Autowired
-  public ContribotApplication(GithubIssueSearchService gitHubIssueSearchService) {
-    this.gitHubIssueSearchService = gitHubIssueSearchService;
+  public ContribotApplication(IGitProviderService gitProviderService) {
+    this.gitProviderService = gitProviderService;
   }
 
   public static void main(String[] args) {
@@ -41,7 +44,10 @@ public class ContribotApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    LOGGER.info("Total issues: {}", gitHubIssueSearchService.count());
+    List<GitIssue> gitIssues = gitProviderService.findIssues(
+        "is:issue is:open label:\"good first issue\" language:Java sort:created-desc created:>=2025-10-11T08:00:00Z"
+    );
+    LOGGER.info("Total issues: {}", gitIssues.size());
   }
 
 }

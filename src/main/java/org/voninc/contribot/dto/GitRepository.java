@@ -13,27 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.voninc.contribot.service;
+package org.voninc.contribot.dto;
 
-import org.kohsuke.github.GitHub;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.net.URL;
 
-@Service
-public class GithubIssueSearchService {
-
-  private final GitHub gitHub;
-
-  @Autowired
-  public GithubIssueSearchService(GitHub gitHub) {
-    this.gitHub = gitHub;
-  }
-
-  public int count() {
-    return gitHub.searchIssues()
-        .q("is:issue is:open label:\"good first issue\" language:Java")
-        .list()
-        .getTotalCount();
-  }
-
+public record GitRepository(String ownerName, String repositoryName, String fullRepositoryName,
+                            URL url) {
 }
