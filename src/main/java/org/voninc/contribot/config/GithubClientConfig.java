@@ -41,14 +41,19 @@ public class GithubClientConfig {
    * It initializes the client using the configured OAuth token for authenticated access to the GitHub REST API.
    *
    * @return The configured GitHub client instance.
-   * @throws IOException If there is an error building the client (e.g., an invalid token
-   * format or connection issues).
    */
   @Bean
-  public GitHub gitHub() throws IOException {
-    return new GitHubBuilder()
-        .withOAuthToken(gitHubToken)
-        .build();
+  public GitHub gitHub() {
+    if (gitHubToken == null || gitHubToken.trim().isEmpty()) {
+      throw new IllegalStateException("GitHub token is not configured. Set 'github.token' in application properties.");
+    }
+    try {
+      return new GitHubBuilder()
+          .withOAuthToken(gitHubToken)
+          .build();
+    } catch (IOException e) {
+      throw new IllegalStateException("Failed to initialize GitHub client: " + e.getMessage(), e);
+    }
   }
 
 }

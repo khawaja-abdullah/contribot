@@ -11,13 +11,29 @@ It works by running a scheduled poll against public Git repositories (starting w
 ## 🏁 Getting Started
 
 ### Run Locally
+Clone the repository
 ```bash
-
-# clone the repository
 git clone https://github.com/khawaja-abdullah/contribot.git
 cd contribot
+```
 
-# build and start the app
+Before running, you must configure a GitHub Authentication Token for the app to access the API.
+- Navigate to your GitHub settings to create a new Personal Access Token (PAT) preferably a fine-grained token.
+- Ensure the token has the necessary scopes for reading public repository data i.e. All repositories (read-only) with 
+specific permissions on Issues (read-only) and Metadata (read-only).
+- Once generated, configure the token using one of the following methods, but NEVER commit the token to version control:
+```yaml
+# Option #1 (application.yml)
+github:
+  token: <YOUR_GITHUB_TOKEN>
+```
+```bash
+# Option #2 (Environment Variables)
+export GITHUB_TOKEN=<YOUR_GITHUB_TOKEN>
+```
+
+Build and start the app
+```code
 ./mvnw clean install -DskipTests
 ./mvnw spring-boot:run
 ```
