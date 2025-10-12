@@ -34,7 +34,7 @@ import java.io.IOException;
 public class GithubClientConfig {
 
   @Value("${github.token}")
-  private String gitHubToken;
+  private String githubToken;
 
   /**
    * Creates and configures the core {@link org.kohsuke.github.GitHub} client bean.
@@ -47,12 +47,12 @@ public class GithubClientConfig {
    */
   @Bean
   public GitHub gitHub() {
-    if (gitHubToken == null || gitHubToken.isBlank()) {
+    if (githubToken == null || githubToken.isBlank()) {
       throw new ContribotRuntimeException("GitHub token is not configured. Set 'github.token' in application properties.");
     }
     try {
       return new GitHubBuilder()
-          .withOAuthToken(gitHubToken)
+          .withOAuthToken(githubToken)
           .build();
     } catch (IOException e) {
       throw new ContribotRuntimeException("Failed to initialize GitHub client: " + e.getMessage(), e);
