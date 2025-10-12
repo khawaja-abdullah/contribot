@@ -33,8 +33,8 @@ export GITHUB_TOKEN=<YOUR_GITHUB_TOKEN>
 ```
 
 Build and start the app
-```code
-./mvnw clean install -DskipTests
+```bash
+./mvnw clean install # -DskipTests (for skipping build with tests)
 ./mvnw spring-boot:run
 ```
 
