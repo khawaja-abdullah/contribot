@@ -31,8 +31,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mockConstruction;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GithubClientConfigTest {
@@ -46,10 +45,14 @@ class GithubClientConfigTest {
   @Test
   void shouldGitHubClientInitializeWhenGitHubAuthenticationTokenIsValid() {
     ReflectionTestUtils.setField(githubClientConfig, GITHUB_TOKEN_FIELD_NAME, GITHUB_PAT);
+    try (MockedConstruction<GitHubBuilder> gitHubBuilderMockedConstruction = mockConstruction(GitHubBuilder.class, (gitHubBuilder, context) -> {
+      when(gitHubBuilder.withOAuthToken(anyString())).thenReturn(gitHubBuilder);
+      when(gitHubBuilder.build()).thenReturn(mock(GitHub.class));
+    })) {
+      GitHub gitHub = githubClientConfig.gitHub();
 
-    GitHub gitHub = githubClientConfig.gitHub();
-
-    assertNotNull(gitHub);
+      assertNotNull(gitHub);
+    }
   }
 
   @Test
