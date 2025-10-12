@@ -80,14 +80,15 @@ class GithubServiceTest {
 
   private GHIssue getGHIssue(GHRepository ghRepository) {
     GHIssue ghIssue = mock(GHIssue.class);
+    when(ghIssue.getRepository()).thenReturn(ghRepository);
+    if (ghRepository == null) return ghIssue; // no further stubbing needed if repository is passed is null.
     when(ghIssue.getTitle()).thenReturn("title");
     when(ghIssue.getBody()).thenReturn("body");
     try {
-      when(ghIssue.getUrl()).thenReturn(URI.create("https://github.com/ownerName/repoName/issues/6").toURL());
+      when(ghIssue.getHtmlUrl()).thenReturn(URI.create("https://github.com/ownerName/repoName/issues/6").toURL());
     } catch (MalformedURLException e) {
-      when(ghIssue.getUrl()).thenReturn(null);
+      when(ghIssue.getHtmlUrl()).thenReturn(null);
     }
-    when(ghIssue.getRepository()).thenReturn(ghRepository);
     return ghIssue;
   }
 
@@ -97,9 +98,9 @@ class GithubServiceTest {
     when(ghRepository.getName()).thenReturn("repoName");
     when(ghRepository.getFullName()).thenReturn("ownerName/repoName");
     try {
-      when(ghRepository.getUrl()).thenReturn(URI.create("https://github.com/ownerName/repoName").toURL());
+      when(ghRepository.getHtmlUrl()).thenReturn(URI.create("https://github.com/ownerName/repoName").toURL());
     } catch (MalformedURLException e) {
-      when(ghRepository.getUrl()).thenReturn(null);
+      when(ghRepository.getHtmlUrl()).thenReturn(null);
     }
     return ghRepository;
   }
