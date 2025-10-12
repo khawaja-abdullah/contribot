@@ -1,8 +1,8 @@
 ## Description
-<!-- Describe your changes in detail -->
+<!-- A minimal summary of what your changes are meant to accomplish -->
 
 ## Related Issue
-<!-- Link to the issue this PR closes (e.g. Closes #42) -->
+<!-- Link to any issue this PR closes (e.g. Closes #42) -->
 
 ## Type of Change
 - [ ] Bug fix

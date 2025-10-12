@@ -36,11 +36,18 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<github-api.version>2.0-rc.5</github-api.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.kohsuke/github-api -->
+		<dependency>
+			<groupId>org.kohsuke</groupId>
+			<artifactId>github-api</artifactId>
+			<version>${github-api.version}</version>
 		</dependency>
 
 		<dependency>
