@@ -63,7 +63,7 @@ class GithubServiceTest {
   @Test
   void shouldThrowExceptionWhenSearchFails() {
     when(gitHub.searchIssues()).thenThrow(new RuntimeException("Something went wrong"));
-    assertThrows(ContribotRuntimeException.class, () -> githubService.findIssues(ISSUE_SEARCH_QUERY).size());
+    assertThrows(ContribotRuntimeException.class, () -> githubService.findIssues(ISSUE_SEARCH_QUERY));
   }
 
   private void givenMocksInitializedForIssueSearch(GHIssue ghIssue) {
