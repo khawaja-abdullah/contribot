@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.voninc.contribot.dto.GitIssue;
 import org.voninc.contribot.dto.GitRepository;
 import org.voninc.contribot.exception.ContribotRuntimeException;
+import org.voninc.contribot.util.ApplicationProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +40,12 @@ public class GithubService implements IGitProviderService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GithubService.class);
 
+  private final ApplicationProperties applicationProperties;
   private final GitHub gitHub;
 
   @Autowired
-  public GithubService(GitHub gitHub) {
+  public GithubService(ApplicationProperties applicationProperties, GitHub gitHub) {
+    this.applicationProperties = applicationProperties;
     this.gitHub = gitHub;
   }
 
@@ -67,7 +70,7 @@ public class GithubService implements IGitProviderService {
       gitHub.searchIssues()
           .q(query)
           .list()
-          .withPageSize(100) // TODO: make configurable later
+          .withPageSize(applicationProperties.getGithubIssueSearchPageSize())
           .forEach(ghIssue -> {
                 GHRepository ghRepository = ghIssue.getRepository();
                 if (ghRepository == null) {

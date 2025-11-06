@@ -1,0 +1,63 @@
+/*
+ * Copyright 2025 Von Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.voninc.contribot.dao;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.voninc.contribot.dto.JobExecution;
+import org.voninc.contribot.exception.ContribotRuntimeException;
+import org.voninc.contribot.util.ApplicationProperties;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.UUID;
+
+@Repository
+public class JobExecutionFSRepository implements IJobExecutionRepository {
+
+  private final ApplicationProperties applicationProperties;
+  private final ObjectMapper objectMapper;
+
+  @Autowired
+  public JobExecutionFSRepository(ApplicationProperties applicationProperties, ObjectMapper objectMapper) {
+    this.applicationProperties = applicationProperties;
+    this.objectMapper = objectMapper;
+  }
+
+  public JobExecution retrieveLast() {
+    try (InputStream inputStream = Files.newInputStream(Paths.get(applicationProperties.getGithubIssueSearchJobExecutionFilePath()))) {
+      byte[] readBytes = inputStream.readAllBytes();
+      if (readBytes.length == 0) {
+        return null;
+      }
+      return objectMapper.readValue(readBytes, JobExecution.class);
+    } catch (Exception e) {
+      throw new ContribotRuntimeException("Failed to retrieve last job execution!", e);
+    }
+  }
+
+  public void persist(JobExecution jobExecution) {
+    try (OutputStream outputStream = Files.newOutputStream(Paths.get(applicationProperties.getGithubIssueSearchJobExecutionFilePath()))) {
+      outputStream.write(objectMapper.writeValueAsBytes(jobExecution));
+    } catch (Exception e) {
+      throw new ContribotRuntimeException("Failed to persist job execution!", e);
+    }
+  }
+
+}
