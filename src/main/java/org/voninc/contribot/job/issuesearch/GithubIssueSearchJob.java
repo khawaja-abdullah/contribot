@@ -38,15 +38,14 @@ public class GithubIssueSearchJob implements IJob {
   private static final Logger LOGGER = LoggerFactory.getLogger(GithubIssueSearchJob.class);
 
   private final GithubProperties githubProperties;
-  private final GithubQueryBuilder gitHubQueryBuilder;
   private final IJobExecutionRepository jobExecutionRepository;
   private final IGitProviderService gitProviderService;
 
   @Autowired
-  public GithubIssueSearchJob(GithubProperties githubProperties, GithubQueryBuilder gitHubQueryBuilder,
-                              IJobExecutionRepository jobExecutionRepository, IGitProviderService gitProviderService) {
+  public GithubIssueSearchJob(GithubProperties githubProperties,
+                              IJobExecutionRepository jobExecutionRepository,
+                              IGitProviderService gitProviderService) {
     this.githubProperties = githubProperties;
-    this.gitHubQueryBuilder = gitHubQueryBuilder;
     this.jobExecutionRepository = jobExecutionRepository;
     this.gitProviderService = gitProviderService;
   }
@@ -59,7 +58,7 @@ public class GithubIssueSearchJob implements IJob {
       LocalDateTime previousRunStartTime = lastJobExecution == null ?
           currentRunStartTime.minusHours(githubProperties.getIssueSearch().getJob().getInitialLookbackHours()) :
           lastJobExecution.startTime();
-      String searchQuery = gitHubQueryBuilder.buildQuery(previousRunStartTime);
+      String searchQuery = GithubQueryBuilder.buildQuery(githubProperties, previousRunStartTime);
       LOGGER.info("Github Search Query: {}", searchQuery);
       // TODO: notification via email with extended API response as message body
       LOGGER.info("Issues found count: {}", gitProviderService.findIssues(searchQuery).size());

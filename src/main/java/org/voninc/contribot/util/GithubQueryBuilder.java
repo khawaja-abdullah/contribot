@@ -15,22 +15,14 @@
  */
 package org.voninc.contribot.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 
-@Component
 public class GithubQueryBuilder {
 
-  private final GithubProperties githubProperties;
-
-  @Autowired
-  public GithubQueryBuilder(GithubProperties githubProperties) {
-    this.githubProperties = githubProperties;
+  private GithubQueryBuilder() {
   }
 
-  public String buildQuery(LocalDateTime createdAt) {
+  public static String buildQuery(GithubProperties githubProperties, LocalDateTime createdAt) {
     StringBuilder query = new StringBuilder();
     githubProperties.getIssueSearch().getQuery().getQualifiers().forEach(
         qualifier -> query.append(qualifier).append(" ")
