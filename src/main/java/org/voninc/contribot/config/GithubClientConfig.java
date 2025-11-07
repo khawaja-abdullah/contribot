@@ -17,10 +17,11 @@ package org.voninc.contribot.config;
 
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.voninc.contribot.exception.ContribotRuntimeException;
+import org.voninc.contribot.util.GithubProperties;
 
 import java.io.IOException;
 
@@ -33,8 +34,12 @@ import java.io.IOException;
 @Configuration
 public class GithubClientConfig {
 
-  @Value("${github.token}")
-  private String githubToken;
+  private final GithubProperties githubProperties;
+
+  @Autowired
+  public GithubClientConfig(GithubProperties githubProperties) {
+    this.githubProperties = githubProperties;
+  }
 
   /**
    * Creates and configures the core {@link org.kohsuke.github.GitHub} client bean.
@@ -47,6 +52,7 @@ public class GithubClientConfig {
    */
   @Bean
   public GitHub gitHub() {
+    String githubToken = githubProperties.getToken();
     if (githubToken == null || githubToken.isBlank()) {
       throw new ContribotRuntimeException("GitHub token is not configured. Set 'github.token' in application properties.");
     }

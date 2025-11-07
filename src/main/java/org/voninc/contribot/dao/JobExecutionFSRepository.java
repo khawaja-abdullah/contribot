@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.voninc.contribot.dto.JobExecution;
 import org.voninc.contribot.exception.ContribotRuntimeException;
-import org.voninc.contribot.util.ApplicationProperties;
+import org.voninc.contribot.util.GithubProperties;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,18 +35,18 @@ public class JobExecutionFSRepository implements IJobExecutionRepository {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JobExecutionFSRepository.class);
 
-  private final ApplicationProperties applicationProperties;
+  private final GithubProperties githubProperties;
   private final ObjectMapper objectMapper;
 
   @Autowired
-  public JobExecutionFSRepository(ApplicationProperties applicationProperties, ObjectMapper objectMapper) {
-    this.applicationProperties = applicationProperties;
+  public JobExecutionFSRepository(GithubProperties githubProperties, ObjectMapper objectMapper) {
+    this.githubProperties = githubProperties;
     this.objectMapper = objectMapper;
   }
 
   public JobExecution retrieveLast() {
     try {
-      Path filePath = Paths.get(applicationProperties.getGithubIssueSearchJobExecutionFilePath());
+      Path filePath = Paths.get(githubProperties.getIssueSearch().getJob().getExecutionFile());
       if (!Files.exists(filePath)) {
         LOGGER.debug("No previous job execution file found...creating one");
         Files.createDirectories(filePath.getParent());
@@ -68,7 +68,7 @@ public class JobExecutionFSRepository implements IJobExecutionRepository {
   }
 
   public void persist(JobExecution jobExecution) {
-    try (OutputStream outputStream = Files.newOutputStream(Paths.get(applicationProperties.getGithubIssueSearchJobExecutionFilePath()))) {
+    try (OutputStream outputStream = Files.newOutputStream(Paths.get(githubProperties.getIssueSearch().getJob().getExecutionFile()))) {
       outputStream.write(objectMapper.writeValueAsBytes(jobExecution));
     } catch (Exception e) {
       throw new ContribotRuntimeException("Failed to persist job execution!", e);

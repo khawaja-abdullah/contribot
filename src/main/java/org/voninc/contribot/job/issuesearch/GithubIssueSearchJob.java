@@ -24,7 +24,8 @@ import org.voninc.contribot.dto.JobExecution;
 import org.voninc.contribot.exception.ContribotRuntimeException;
 import org.voninc.contribot.job.IJob;
 import org.voninc.contribot.service.IGitProviderService;
-import org.voninc.contribot.util.ApplicationProperties;
+import org.voninc.contribot.util.GithubProperties;
+import org.voninc.contribot.util.GithubQueryBuilder;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -36,14 +37,16 @@ public class GithubIssueSearchJob implements IJob {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GithubIssueSearchJob.class);
 
-  private final ApplicationProperties applicationProperties;
+  private final GithubProperties githubProperties;
+  private final GithubQueryBuilder gitHubQueryBuilder;
   private final IJobExecutionRepository jobExecutionRepository;
   private final IGitProviderService gitProviderService;
 
   @Autowired
-  public GithubIssueSearchJob(ApplicationProperties applicationProperties, IJobExecutionRepository jobExecutionRepository,
-                              IGitProviderService gitProviderService) {
-    this.applicationProperties = applicationProperties;
+  public GithubIssueSearchJob(GithubProperties githubProperties, GithubQueryBuilder gitHubQueryBuilder,
+                              IJobExecutionRepository jobExecutionRepository, IGitProviderService gitProviderService) {
+    this.githubProperties = githubProperties;
+    this.gitHubQueryBuilder = gitHubQueryBuilder;
     this.jobExecutionRepository = jobExecutionRepository;
     this.gitProviderService = gitProviderService;
   }
@@ -54,13 +57,10 @@ public class GithubIssueSearchJob implements IJob {
     try {
       JobExecution lastJobExecution = jobExecutionRepository.retrieveLast();
       LocalDateTime previousRunStartTime = lastJobExecution == null ?
-          currentRunStartTime.minusHours(applicationProperties.getGithubIssueSearchJobFirstRunDeltaHours()) :
+          currentRunStartTime.minusHours(githubProperties.getIssueSearch().getJob().getInitialLookbackHours()) :
           lastJobExecution.startTime();
-      String searchQuery = applicationProperties.getGithubIssueSearchQueryTemplate().formatted(
-          applicationProperties.getGithubIssueSearchQueryLabel(),
-          applicationProperties.getGithubIssueSearchQueryLanguage(),
-          previousRunStartTime
-      );
+      String searchQuery = gitHubQueryBuilder.buildQuery(previousRunStartTime);
+      LOGGER.info("Github Search Query: {}", searchQuery);
       // TODO: notification via email with extended API response as message body
       LOGGER.info("Issues found count: {}", gitProviderService.findIssues(searchQuery).size());
       LocalDateTime currentRunEndTime = LocalDateTime.now(ZoneOffset.UTC);
