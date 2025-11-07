@@ -29,12 +29,12 @@ import java.util.List;
 public class GithubProperties {
 
   private String token;
-
   private IssueSearch issueSearch;
 
   @Getter
   @Setter
   public static class IssueSearch {
+
     private int pageSize;
     private Query query;
     private Job job;
@@ -42,15 +42,20 @@ public class GithubProperties {
     @Getter
     @Setter
     public static class Query {
+
       private List<String> qualifiers;
+
     }
 
     @Getter
     @Setter
     public static class Job {
+
       private String executionFile;
       private long initialLookbackHours;
+
     }
+
   }
 
 }

@@ -58,7 +58,7 @@ public class GithubIssueSearchJob implements IJob {
       LocalDateTime previousRunStartTime = lastJobExecution == null ?
           currentRunStartTime.minusHours(githubProperties.getIssueSearch().getJob().getInitialLookbackHours()) :
           lastJobExecution.startTime();
-      String searchQuery = GithubQueryBuilder.buildQuery(githubProperties, previousRunStartTime);
+      String searchQuery = GithubQueryBuilder.buildIssueSearchQuery(githubProperties, previousRunStartTime);
       LOGGER.info("Github Search Query: {}", searchQuery);
       // TODO: notification via email with extended API response as message body
       LOGGER.info("Issues found count: {}", gitProviderService.findIssues(searchQuery).size());

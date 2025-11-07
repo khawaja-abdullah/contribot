@@ -24,15 +24,19 @@ public class GithubQueryBuilder {
   private GithubQueryBuilder() {
   }
 
-  public static String buildQuery(GithubProperties githubProperties, LocalDateTime createdAt) {
+  public static String buildIssueSearchQuery(GithubProperties githubProperties, LocalDateTime createdAt) {
     StringBuilder query = new StringBuilder();
     githubProperties.getIssueSearch().getQuery().getQualifiers().forEach(
-        qualifier -> query.append(qualifier).append(" ")
+        qualifier -> {
+          if (!(qualifier.contains(Constant.SORT_QUALIFIER_FIELD) || qualifier.contains(Constant.CREATED_QUALIFIER_FIELD))) {
+            query.append(qualifier).append(" ");
+          }
+        }
     );
     query.append(Constant.SORT_CREATED_DESC)
         .append(" ")
         .append(Constant.CREATED_GTE).append(createdAt);
-    return query.toString().trim();
+    return query.toString();
   }
 
 }
