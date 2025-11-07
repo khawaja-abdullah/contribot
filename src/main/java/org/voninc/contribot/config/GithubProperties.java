@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.voninc.contribot.util;
+package org.voninc.contribot.config;
 
 import lombok.Getter;
 import lombok.Setter;

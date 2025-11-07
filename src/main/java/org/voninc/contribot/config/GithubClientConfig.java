@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.voninc.contribot.exception.ContribotRuntimeException;
-import org.voninc.contribot.util.GithubProperties;
 
 import java.io.IOException;
 

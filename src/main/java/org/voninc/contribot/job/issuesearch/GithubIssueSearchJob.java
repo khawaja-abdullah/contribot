@@ -24,7 +24,7 @@ import org.voninc.contribot.dto.JobExecution;
 import org.voninc.contribot.exception.ContribotRuntimeException;
 import org.voninc.contribot.job.IJob;
 import org.voninc.contribot.service.IGitProviderService;
-import org.voninc.contribot.util.GithubProperties;
+import org.voninc.contribot.config.GithubProperties;
 import org.voninc.contribot.util.GithubQueryBuilder;
 
 import java.time.Duration;

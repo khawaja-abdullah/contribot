@@ -15,6 +15,8 @@
  */
 package org.voninc.contribot.util;
 
+import org.voninc.contribot.config.GithubProperties;
+
 import java.time.LocalDateTime;
 
 public class GithubQueryBuilder {

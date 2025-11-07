@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.voninc.contribot.dto.GitIssue;
 import org.voninc.contribot.dto.GitRepository;
 import org.voninc.contribot.exception.ContribotRuntimeException;
-import org.voninc.contribot.util.GithubProperties;
+import org.voninc.contribot.config.GithubProperties;
 
 import java.util.ArrayList;
 import java.util.List;
