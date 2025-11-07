@@ -28,28 +28,29 @@ import java.util.List;
 @ConfigurationProperties(prefix = "github")
 public class GithubProperties {
 
-    private String token;
+  private String token;
 
-    private IssueSearch issueSearch;
+  private IssueSearch issueSearch;
+
+  @Getter
+  @Setter
+  public static class IssueSearch {
+    private int pageSize;
+    private Query query;
+    private Job job;
 
     @Getter
     @Setter
-    public static class IssueSearch {
-        private int pageSize;
-        private Query query;
-        private Job job;
-
-        @Getter
-        @Setter
-        public static class Query {
-            private List<String> qualifiers;
-        }
-
-        @Getter
-        @Setter
-        public static class Job {
-            private String executionFile;
-            private long initialLookbackHours;
-        }
+    public static class Query {
+      private List<String> qualifiers;
     }
+
+    @Getter
+    @Setter
+    public static class Job {
+      private String executionFile;
+      private long initialLookbackHours;
+    }
+  }
+
 }
