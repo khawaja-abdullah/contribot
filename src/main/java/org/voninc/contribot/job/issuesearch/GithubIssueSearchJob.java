@@ -61,6 +61,7 @@ public class GithubIssueSearchJob implements IJob {
           applicationProperties.getGithubIssueSearchQueryLanguage(),
           previousRunStartTime
       );
+      // TODO: notification via email with extended API response as message body
       LOGGER.info("Issues found count: {}", gitProviderService.findIssues(searchQuery).size());
       LocalDateTime currentRunEndTime = LocalDateTime.now(ZoneOffset.UTC);
       JobExecution currentJobExecution = new JobExecution(
@@ -68,7 +69,7 @@ public class GithubIssueSearchJob implements IJob {
       );
       jobExecutionRepository.persist(currentJobExecution);
     } catch (ContribotRuntimeException e) {
-      LOGGER.error("Exception while executing GithubIssueSearchJob", e);
+      LOGGER.error("GithubIssueSearchJob execution failed!", e);
     }
   }
 
