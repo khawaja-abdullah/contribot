@@ -16,6 +16,8 @@
 package org.voninc.contribot.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.voninc.contribot.dto.JobExecution;
@@ -25,11 +27,14 @@ import org.voninc.contribot.util.ApplicationProperties;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
 @Repository
 public class JobExecutionFSRepository implements IJobExecutionRepository {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(JobExecutionFSRepository.class);
 
   private final ApplicationProperties applicationProperties;
   private final ObjectMapper objectMapper;
@@ -41,12 +46,23 @@ public class JobExecutionFSRepository implements IJobExecutionRepository {
   }
 
   public JobExecution retrieveLast() {
-    try (InputStream inputStream = Files.newInputStream(Paths.get(applicationProperties.getGithubIssueSearchJobExecutionFilePath()))) {
-      byte[] readBytes = inputStream.readAllBytes();
-      if (readBytes.length == 0) {
+    try {
+      Path filePath = Paths.get(applicationProperties.getGithubIssueSearchJobExecutionFilePath());
+      if (!Files.exists(filePath)) {
+        LOGGER.debug("No previous job execution file found...creating one");
+        Files.createDirectories(filePath.getParent());
+        Files.createFile(filePath);
+        LOGGER.debug("Created new file for storing job execution: {}", filePath);
         return null;
       }
-      return objectMapper.readValue(readBytes, JobExecution.class);
+      try (InputStream inputStream = Files.newInputStream(filePath)) {
+        byte[] readBytes = inputStream.readAllBytes();
+        if (readBytes.length == 0) {
+          LOGGER.debug("Previous job execution file has no data");
+          return null;
+        }
+        return objectMapper.readValue(readBytes, JobExecution.class);
+      }
     } catch (Exception e) {
       throw new ContribotRuntimeException("Failed to retrieve last job execution!", e);
     }
