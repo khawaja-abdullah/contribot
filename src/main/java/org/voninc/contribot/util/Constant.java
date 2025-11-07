@@ -20,9 +20,4 @@ public class Constant {
   private Constant() {
   }
 
-  public static final String ISSUE_SEARCH_QUERY_TEMPLATE =
-      "is:issue is:open label:\"%s\" language:%s sort:created-desc created:>=%s";
-  public static final String ISSUE_SEARCH_JOB_EXECUTION_FILE_PATH =
-      "data/issuesearch/job-execution.json";
-
 }
