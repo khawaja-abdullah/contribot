@@ -27,9 +27,9 @@ public class GithubQueryBuilder {
     githubProperties.getIssueSearch().getQuery().getQualifiers().forEach(
         qualifier -> query.append(qualifier).append(" ")
     );
-    query.append("sort:created-desc")
+    query.append(Constant.SORT_CREATED_DESC)
         .append(" ")
-        .append("created:>=").append(createdAt);
+        .append(Constant.CREATED_GTE).append(createdAt);
     return query.toString().trim();
   }
 

@@ -20,4 +20,7 @@ public class Constant {
   private Constant() {
   }
 
+  public static final String SORT_CREATED_DESC = "sort:created-desc";
+  public static final String CREATED_GTE = "created:>=";
+
 }
