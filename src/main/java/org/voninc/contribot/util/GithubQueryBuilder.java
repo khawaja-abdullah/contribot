@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
  * query strings that comply with the target provider's search API syntax, currently
  * focused on GitHub issue search.</p>
  */
-public class GithubQueryBuilder {
+public final class GithubQueryBuilder {
 
   private GithubQueryBuilder() {
     // Prevent instantiation
@@ -51,7 +51,7 @@ public class GithubQueryBuilder {
     StringBuilder query = new StringBuilder();
     githubProperties.getIssueSearch().getQuery().getQualifiers().forEach(
         qualifier -> {
-          if (!(qualifier.contains(Constant.SORT_QUALIFIER_FIELD) || qualifier.contains(Constant.CREATED_QUALIFIER_FIELD))) {
+          if (!(qualifier.startsWith(Constant.SORT_QUALIFIER_FIELD) || qualifier.startsWith(Constant.CREATED_QUALIFIER_FIELD))) {
             query.append(qualifier).append(" ");
           }
         }

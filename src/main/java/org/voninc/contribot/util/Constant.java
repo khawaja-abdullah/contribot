@@ -20,7 +20,7 @@ package org.voninc.contribot.util;
  *
  * <p>This class is not instantiable and only provides {@code static final} constants.</p>
  */
-public class Constant {
+public final class Constant {
 
   private Constant() {
     // Prevent instantiation
