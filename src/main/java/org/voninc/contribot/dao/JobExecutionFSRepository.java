@@ -81,7 +81,6 @@ public class JobExecutionFSRepository implements IJobExecutionRepository {
         Files.createDirectories(filePath.getParent());
         Files.createFile(filePath);
         LOGGER.debug("Created new file for storing job execution: {}", filePath);
-        return null;
       }
       try (InputStream inputStream = Files.newInputStream(filePath)) {
         byte[] readBytes = inputStream.readAllBytes();
