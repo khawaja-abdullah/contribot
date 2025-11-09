@@ -3,3 +3,14 @@ spring:
     name: contribot
 github:
   token: ${GITHUB_TOKEN}
+  issue-search:
+    page-size: 50
+    query:
+      qualifiers:
+        - is:issue
+        - is:open
+        - label:"good first issue"
+        - language:Java
+    job:
+      execution-file: data/issuesearch/job-execution.json
+      initial-lookback-hours: 4

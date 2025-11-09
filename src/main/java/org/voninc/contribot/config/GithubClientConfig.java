@@ -17,7 +17,7 @@ package org.voninc.contribot.config;
 
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.voninc.contribot.exception.ContribotRuntimeException;
@@ -25,28 +25,40 @@ import org.voninc.contribot.exception.ContribotRuntimeException;
 import java.io.IOException;
 
 /**
- * Configuration class responsible for setting up and providing the {@link org.kohsuke.github.GitHub} client bean.
- * <p>
- * This class uses an authenticated GitHub token (which could be a Fine-grained PAT, a Classic PAT, or a GitHub App
- * Installation Access Token) from application properties to authenticate the client for making secure API calls.
+ * Spring configuration class responsible for creating and exposing a singleton {@link GitHub} client bean.
+ *
+ * <p>This configuration authenticates a GitHub client using an access token retrieved from
+ * {@link GithubProperties}. The token can represent a Fine-grained Personal Access Token (PAT),
+ * a Classic PAT, or a GitHub App installation access token.</p>
+ *
+ * <p>The resulting {@link GitHub} instance is preconfigured for authenticated interaction
+ * with the GitHub REST API, allowing other components to perform secure operations such as
+ * repository management, issue tracking, or pull request handling.</p>
  */
 @Configuration
 public class GithubClientConfig {
 
-  @Value("${github.token}")
-  private String githubToken;
+  private final GithubProperties githubProperties;
+
+  @Autowired
+  public GithubClientConfig(GithubProperties githubProperties) {
+    this.githubProperties = githubProperties;
+  }
 
   /**
-   * Creates and configures the core {@link org.kohsuke.github.GitHub} client bean.
-   * <p>
-   * It initializes the client using the configured OAuth token for authenticated access to the GitHub REST API.
+   * Creates and configures the core {@link GitHub} client bean.
    *
-   * @return The configured GitHub client instance.
-   * @throws IllegalStateException If there is an error building the client (e.g., an unconfigured token or invalid
-   *                               token format or connection issues).
+   * <p>This method initializes an authenticated GitHub client using the token defined in the
+   * application properties. The resulting client provides authorized access to GitHub’s API
+   * endpoints and can be injected into other Spring components as needed.</p>
+   *
+   * @return a fully initialized and authenticated {@link GitHub} client instance
+   * @throws ContribotRuntimeException if the GitHub token is missing, invalid, or if a client
+   *                                   initialization error occurs (e.g., network failure or I/O issue)
    */
   @Bean
   public GitHub gitHub() {
+    String githubToken = githubProperties.getToken();
     if (githubToken == null || githubToken.isBlank()) {
       throw new ContribotRuntimeException("GitHub token is not configured. Set 'github.token' in application properties.");
     }

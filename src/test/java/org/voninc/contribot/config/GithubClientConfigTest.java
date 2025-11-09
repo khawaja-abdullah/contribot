@@ -21,9 +21,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.voninc.contribot.exception.ContribotRuntimeException;
 
 import java.io.IOException;
@@ -36,15 +36,16 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class GithubClientConfigTest {
 
-  private static final String GITHUB_TOKEN_FIELD_NAME = "githubToken";
   private static final String GITHUB_PAT = "ghp_THIS_IS_A_DUMMY_TOKEN_REPLACE_ME_FOR_REAL_USE";
 
+  @Mock
+  private GithubProperties githubProperties;
   @InjectMocks
   private GithubClientConfig githubClientConfig;
 
   @Test
   void shouldGitHubClientInitializeWhenGitHubAuthenticationTokenIsValid() {
-    ReflectionTestUtils.setField(githubClientConfig, GITHUB_TOKEN_FIELD_NAME, GITHUB_PAT);
+    when(githubProperties.getToken()).thenReturn(GITHUB_PAT);
     try (MockedConstruction<GitHubBuilder> gitHubBuilderMockedConstruction = mockConstruction(GitHubBuilder.class, (gitHubBuilder, context) -> {
       when(gitHubBuilder.withOAuthToken(anyString())).thenReturn(gitHubBuilder);
       when(gitHubBuilder.build()).thenReturn(mock(GitHub.class));
@@ -57,19 +58,19 @@ class GithubClientConfigTest {
 
   @Test
   void shouldThrowExceptionWhenGitHubAuthenticationTokenIsInValid() {
-    ReflectionTestUtils.setField(githubClientConfig, GITHUB_TOKEN_FIELD_NAME, null);
+    when(githubProperties.getToken()).thenReturn(null);
     assertThrows(ContribotRuntimeException.class, () -> githubClientConfig.gitHub());
 
-    ReflectionTestUtils.setField(githubClientConfig, GITHUB_TOKEN_FIELD_NAME, Strings.EMPTY);
+    when(githubProperties.getToken()).thenReturn(Strings.EMPTY);
     assertThrows(ContribotRuntimeException.class, () -> githubClientConfig.gitHub());
 
-    ReflectionTestUtils.setField(githubClientConfig, GITHUB_TOKEN_FIELD_NAME, "   ");
+    when(githubProperties.getToken()).thenReturn("   ");
     assertThrows(ContribotRuntimeException.class, () -> githubClientConfig.gitHub());
   }
 
   @Test
   void shouldThrowExceptionWhenGitHubClientInitializationFails() {
-    ReflectionTestUtils.setField(githubClientConfig, GITHUB_TOKEN_FIELD_NAME, GITHUB_PAT);
+    when(githubProperties.getToken()).thenReturn(GITHUB_PAT);
     try (MockedConstruction<GitHubBuilder> gitHubBuilderMockedConstruction = mockConstruction(GitHubBuilder.class, (gitHubBuilder, context) -> {
       when(gitHubBuilder.withOAuthToken(anyString())).thenReturn(gitHubBuilder);
       when(gitHubBuilder.build()).thenThrow(new IOException("Simulated Invalid Token Error"));

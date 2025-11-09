@@ -15,6 +15,7 @@
  */
 package org.voninc.contribot.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kohsuke.github.*;
@@ -22,6 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.voninc.contribot.config.GithubProperties;
 import org.voninc.contribot.exception.ContribotRuntimeException;
 
 import java.net.MalformedURLException;
@@ -36,8 +38,13 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class GithubServiceTest {
 
+  private static final int ISSUE_SEARCH_PAGE_SIZE = 100;
   private static final String ISSUE_SEARCH_QUERY = "is:issue is:open label:\"good first issue\" language:Java sort:created-desc created:>=2025-10-11T08:00:00Z";
 
+  @Mock
+  private GithubProperties.IssueSearch githubPropertiesIssueSearch;
+  @Mock
+  private GithubProperties githubProperties;
   @Mock
   private PagedSearchIterable<GHIssue> pagedSearchIterableOfGHIssue;
   @Mock
@@ -47,6 +54,12 @@ class GithubServiceTest {
 
   @InjectMocks
   private GithubService githubService;
+
+  @BeforeEach
+  void setUp() {
+    lenient().when(githubPropertiesIssueSearch.getPageSize()).thenReturn(ISSUE_SEARCH_PAGE_SIZE);
+    lenient().when(githubProperties.getIssueSearch()).thenReturn(githubPropertiesIssueSearch);
+  }
 
   @Test
   void shouldFindIssuesWhenQueryIsValid() {
@@ -72,7 +85,7 @@ class GithubServiceTest {
       consumer.accept(ghIssue);
       return null;
     }).when(pagedSearchIterableOfGHIssue).forEach(any());
-    when(pagedSearchIterableOfGHIssue.withPageSize(100)).thenReturn(pagedSearchIterableOfGHIssue);
+    when(pagedSearchIterableOfGHIssue.withPageSize(githubProperties.getIssueSearch().getPageSize())).thenReturn(pagedSearchIterableOfGHIssue);
     when(ghIssueSearchBuilder.list()).thenReturn(pagedSearchIterableOfGHIssue);
     when(ghIssueSearchBuilder.q(ISSUE_SEARCH_QUERY)).thenReturn(ghIssueSearchBuilder);
     when(gitHub.searchIssues()).thenReturn(ghIssueSearchBuilder);
