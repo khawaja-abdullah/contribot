@@ -32,6 +32,18 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 
+/**
+ * Job responsible for searching GitHub issues based on configured query parameters.
+ *
+ * <p>This job retrieves the last execution timestamp from {@link IJobExecutionRepository} to determine
+ * the search window. It constructs a GitHub search query using {@link GithubQueryBuilder} and executes
+ * it via {@link IGitProviderService}.</p>
+ *
+ * <p>After execution, the job persists a {@link org.voninc.contribot.dto.JobExecution} record
+ * containing the job's start time, end time, and duration for tracking future executions.</p>
+ *
+ * <p>Execution errors are logged via {@link org.slf4j.Logger} but do not propagate further.</p>
+ */
 @Component
 public class GithubIssueSearchJob implements IJob {
 
@@ -50,6 +62,23 @@ public class GithubIssueSearchJob implements IJob {
     this.gitProviderService = gitProviderService;
   }
 
+  /**
+   * Executes the GitHub issue search job.
+   *
+   * <p>Steps performed:</p>
+   * <ol>
+   *   <li>Determine the start time of the current run.</li>
+   *   <li>Retrieve the last {@link JobExecution} from {@link IJobExecutionRepository}.</li>
+   *   <li>Determine the search window based on the last execution or initial lookback hours.</li>
+   *   <li>Construct a GitHub issue search query using {@link GithubQueryBuilder}.</li>
+   *   <li>Execute the search via {@link IGitProviderService} and log the number of issues found.</li>
+   *   <li>Create a new {@link JobExecution} record with start time, end time, and duration.</li>
+   *   <li>Persist the job execution using {@link IJobExecutionRepository}.</li>
+   *   <li>Log completion and any errors encountered.</li>
+   * </ol>
+   *
+   * <p>All timestamps are in UTC. Duration is calculated in milliseconds.</p>
+   */
   @Override
   public void run() {
     LocalDateTime currentRunStartTime = LocalDateTime.now(ZoneOffset.UTC);

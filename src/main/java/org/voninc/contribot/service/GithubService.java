@@ -30,10 +30,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Concrete implementation of the {@link IGitProviderService} interface for the GitHub platform.
- * <p>
- * This class acts as an **Adapter**, translating the generic service contract into specific calls to the
- * {@link org.kohsuke.github.GitHub} client.
+ * GitHub-specific implementation of the {@link IGitProviderService} interface.
+ *
+ * <p>This service acts as an adapter between the generic {@link IGitProviderService} contract
+ * and the {@link org.kohsuke.github.GitHub} client library, translating generic queries into
+ * GitHub API calls and converting GitHub responses into standardized {@link GitIssue} DTOs.</p>
+ *
+ * <p>Responsibilities:</p>
+ * <ul>
+ *   <li>Authenticate with GitHub using credentials from {@link GithubProperties}.</li>
+ *   <li>Perform issue searches based on GitHub's native search query syntax.</li>
+ *   <li>Map native GitHub {@code GHIssue} and {@code GHRepository} objects to
+ *       the application's {@link GitIssue} and {@link GitRepository} DTOs.</li>
+ *   <li>Handle potential API or network exceptions by wrapping them in
+ *       {@link ContribotRuntimeException}.</li>
+ * </ul>
+ *
+ * <p>Example usage:</p>
+ * <pre>{@code
+ * List<GitIssue> issues = githubService.findIssues("label:\"bug\" is:open");
+ * }</pre>
  */
 @Service
 public class GithubService implements IGitProviderService {
@@ -50,18 +66,15 @@ public class GithubService implements IGitProviderService {
   }
 
   /**
-   * Executes a search against the GitHub Issues Search API using the provided query string.
-   * <p>
-   * It performs the following steps:
-   * <ul>
-   * <li>Passes the {@code query} directly to the GitHub API.</li>
-   * <li>Retrieves the list of matching {@code GHIssue} objects.</li>
-   * <li>Iterates through the results, converting each GitHub native object into a
-   * standardized {@link GitIssue} DTO.</li>
-   * </ul>
+   * Searches for issues on GitHub using the provided query string.
    *
-   * @param query The GitHub-specific search string (e.g., {@code "label:\"good first issue\" is:open"}).
-   * @return A list of standardized {@link GitIssue} DTOs.
+   * <p>The query string must follow GitHub's search syntax. Each resulting issue is
+   * mapped to a {@link GitIssue} object, which includes basic issue details and
+   * associated repository information.</p>
+   *
+   * @param query GitHub-specific search string (e.g., {@code "label:\"good first issue\" is:open"}).
+   * @return List of {@link GitIssue} objects matching the search criteria.
+   * @throws ContribotRuntimeException If the GitHub API call fails or results cannot be processed.
    */
   @Override
   public List<GitIssue> findIssues(String query) {

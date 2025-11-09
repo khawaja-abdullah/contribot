@@ -15,5 +15,11 @@
  */
 package org.voninc.contribot.job;
 
+/**
+ * Represents a unit of work that can be executed by the system.
+ *
+ * <p>Extends {@link Runnable} to allow job implementations to be run in threads,
+ * scheduled tasks, or other asynchronous execution mechanisms.</p>
+ */
 public interface IJob extends Runnable {
 }

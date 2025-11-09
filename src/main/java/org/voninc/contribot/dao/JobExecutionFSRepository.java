@@ -30,6 +30,26 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * File system–based implementation of {@link IJobExecutionRepository}.
+ *
+ * <p>This repository persists and retrieves {@link JobExecution} records from the local file system
+ * using a JSON file defined in the GitHub configuration properties.</p>
+ *
+ * <p>It uses Jackson's {@link ObjectMapper} for serialization and deserialization of job execution
+ * metadata and automatically creates the target file if it does not exist.</p>
+ *
+ * <p>Example configuration reference (from {@code application.yml}):</p>
+ * <pre>{@code
+ * github:
+ *   issue-search:
+ *     job:
+ *       execution-file: data/job-execution.json
+ * }</pre>
+ *
+ * <p><b>Note:</b> This implementation is suitable for lightweight or single-instance deployments.
+ * For distributed or concurrent environments, consider a database-backed repository instead.</p>
+ */
 @Repository
 public class JobExecutionFSRepository implements IJobExecutionRepository {
 
@@ -44,6 +64,15 @@ public class JobExecutionFSRepository implements IJobExecutionRepository {
     this.objectMapper = objectMapper;
   }
 
+  /**
+   * Retrieves the most recent {@link JobExecution} record from the configured file path.
+   *
+   * <p>If the file does not exist, it will be created automatically and {@code null} will be returned.
+   * If the file exists but is empty, {@code null} will also be returned.</p>
+   *
+   * @return the last recorded {@link JobExecution}, or {@code null} if no record is available
+   * @throws ContribotRuntimeException if the file cannot be read or deserialized
+   */
   public JobExecution retrieveLast() {
     try {
       Path filePath = Paths.get(githubProperties.getIssueSearch().getJob().getExecutionFile());
@@ -67,6 +96,12 @@ public class JobExecutionFSRepository implements IJobExecutionRepository {
     }
   }
 
+  /**
+   * Persists a {@link JobExecution} record to the configured file path, overwriting any existing content.
+   *
+   * @param jobExecution the job execution metadata to persist; must not be {@code null}
+   * @throws ContribotRuntimeException if the file cannot be written to or serialized
+   */
   public void persist(JobExecution jobExecution) {
     try (OutputStream outputStream = Files.newOutputStream(Paths.get(githubProperties.getIssueSearch().getJob().getExecutionFile()))) {
       outputStream.write(objectMapper.writeValueAsBytes(jobExecution));

@@ -22,6 +22,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.voninc.contribot.job.issuesearch.GithubIssueSearchJob;
 
+/**
+ * Spring Boot {@link CommandLineRunner} implementation that triggers the execution
+ * of the {@link GithubIssueSearchJob} at application startup.
+ *
+ * <p>This component ensures that the GitHub issue search job runs automatically
+ * when the Spring Boot application context is fully initialized.</p>
+ */
 @Component
 public class JobRunner implements CommandLineRunner {
 
@@ -34,6 +41,12 @@ public class JobRunner implements CommandLineRunner {
     this.githubIssueSearchJob = githubIssueSearchJob;
   }
 
+  /**
+   * Invoked by Spring Boot on application startup to run the GitHub issue search job.
+   *
+   * @param args Command-line arguments passed to the application (ignored by this implementation).
+   * @throws Exception If the job execution fails for any reason.
+   */
   @Override
   public void run(String... args) throws Exception {
     LOGGER.info("Starting Github Issue Search Job ...");

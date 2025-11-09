@@ -15,9 +15,15 @@
  */
 package org.voninc.contribot.util;
 
+/**
+ * Utility class containing constants used across the application.
+ *
+ * <p>This class is not instantiable and only provides {@code static final} constants.</p>
+ */
 public class Constant {
 
   private Constant() {
+    // Prevent instantiation
   }
 
   public static final String SORT_QUALIFIER_FIELD = "sort";

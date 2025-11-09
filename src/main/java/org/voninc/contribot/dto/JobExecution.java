@@ -18,5 +18,16 @@ package org.voninc.contribot.dto;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Represents the metadata of a single job execution.
+ *
+ * <p>This record stores information about the execution of a background or scheduled job,
+ * including its unique identifier, start and end timestamps, and total duration.</p>
+ *
+ * @param jobId     the unique identifier of the job execution
+ * @param startTime the timestamp when the job execution started
+ * @param endTime   the timestamp when the job execution finished
+ * @param duration  the duration of the job execution in milliseconds
+ */
 public record JobExecution(UUID jobId, LocalDateTime startTime, LocalDateTime endTime, long duration) {
 }
