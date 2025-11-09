@@ -38,6 +38,7 @@ class IJobExecutionRepositoryTest {
 
       @Override
       public void persist(JobExecution jobExecution) {
+        // do nothing
       }
     });
   }
