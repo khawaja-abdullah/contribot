@@ -78,7 +78,10 @@ public class JobExecutionFSRepository implements IJobExecutionRepository {
       Path filePath = Paths.get(githubProperties.getIssueSearch().getJob().getExecutionFile());
       if (!Files.exists(filePath)) {
         LOGGER.debug("No previous job execution file found...creating one");
-        Files.createDirectories(filePath.getParent());
+        Path parent = filePath.getParent();
+        if (parent != null) {
+          Files.createDirectories(parent);
+        }
         Files.createFile(filePath);
         LOGGER.debug("Created new file for storing job execution: {}", filePath);
       }

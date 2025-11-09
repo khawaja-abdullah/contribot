@@ -93,7 +93,7 @@ public class GithubIssueSearchJob implements IJob {
       LOGGER.info("Issues found count: {}", gitProviderService.findIssues(searchQuery).size());
       LocalDateTime currentRunEndTime = LocalDateTime.now(ZoneOffset.UTC);
       JobExecution currentJobExecution = new JobExecution(
-          UUID.randomUUID(), currentRunStartTime, currentRunEndTime, Duration.between(currentRunStartTime, currentRunEndTime).getNano() / 100_000
+          UUID.randomUUID(), currentRunStartTime, currentRunEndTime, Duration.between(currentRunStartTime, currentRunEndTime).toMillis()
       );
       jobExecutionRepository.persist(currentJobExecution);
     } catch (ContribotRuntimeException e) {

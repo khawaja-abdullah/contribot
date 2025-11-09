@@ -26,14 +26,13 @@ public class Constant {
     // Prevent instantiation
   }
 
-  public static final String SORT_QUALIFIER_FIELD = "sort";
+  public static final String SORT_QUALIFIER_FIELD = "sort:";
   private static final String SORT_QUALIFIER_VALUE_CREATED_DESC = "created-desc";
-  public static final String CREATED_QUALIFIER_FIELD = "created";
+  public static final String CREATED_QUALIFIER_FIELD = "created:";
 
-  private static final String COLON = ":";
   private static final String GTE = ">=";
 
-  public static final String SORT_CREATED_DESC = SORT_QUALIFIER_FIELD + COLON + SORT_QUALIFIER_VALUE_CREATED_DESC;
-  public static final String CREATED_GTE = CREATED_QUALIFIER_FIELD + COLON + GTE;
+  public static final String SORT_CREATED_DESC = SORT_QUALIFIER_FIELD + SORT_QUALIFIER_VALUE_CREATED_DESC;
+  public static final String CREATED_GTE = CREATED_QUALIFIER_FIELD + GTE;
 
 }
