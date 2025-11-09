@@ -20,12 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.voninc.contribot.config.GithubProperties;
 import org.voninc.contribot.dto.JobExecution;
 import org.voninc.contribot.exception.ContribotRuntimeException;
-import org.voninc.contribot.config.GithubProperties;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -105,8 +104,11 @@ public class JobExecutionFSRepository implements IJobExecutionRepository {
    * @throws ContribotRuntimeException if the file cannot be written to or serialized
    */
   public void persist(JobExecution jobExecution) {
-    try (OutputStream outputStream = Files.newOutputStream(Paths.get(githubProperties.getIssueSearch().getJob().getExecutionFile()))) {
-      outputStream.write(objectMapper.writeValueAsBytes(jobExecution));
+    try {
+      Path targetPath = Paths.get(githubProperties.getIssueSearch().getJob().getExecutionFile());
+      Path tempPath = targetPath.resolveSibling(targetPath.getFileName() + ".tmp");
+      Files.write(tempPath, objectMapper.writeValueAsBytes(jobExecution));
+      Files.move(tempPath, targetPath, java.nio.file.StandardCopyOption.REPLACE_EXISTING, java.nio.file.StandardCopyOption.ATOMIC_MOVE);
     } catch (Exception e) {
       throw new ContribotRuntimeException("Failed to persist job execution!", e);
     }
