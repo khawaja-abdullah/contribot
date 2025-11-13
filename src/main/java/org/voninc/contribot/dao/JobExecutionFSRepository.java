@@ -108,7 +108,9 @@ public class JobExecutionFSRepository implements IJobExecutionRepository {
       Path targetPath = Paths.get(githubProperties.getIssueSearch().getJob().getExecutionFile());
       Path tempPath = targetPath.resolveSibling(targetPath.getFileName() + ".tmp");
       Files.write(tempPath, objectMapper.writeValueAsBytes(jobExecution));
+      LOGGER.debug("Written contents to tempPath: {}", tempPath);
       Files.move(tempPath, targetPath, java.nio.file.StandardCopyOption.REPLACE_EXISTING, java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+      LOGGER.debug("Moved contents to targetPath: {}", targetPath);
     } catch (Exception e) {
       throw new ContribotRuntimeException("Failed to persist job execution!", e);
     }

@@ -2,7 +2,7 @@ name: background-jobs
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -26,4 +26,4 @@ jobs:
       - name: Run contribot
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: ./mvnw spring-boot:run -Dgh.issue-search.job.execution-file=issue-search.json
+        run: ./mvnw spring-boot:run -Dgh.issue-search.job.execution-file=issue-search.json -Dspring-boot.run.arguments="--logging.level.org.voninc.contribot.dao.JobExecutionFSRepository=DEBUG"
