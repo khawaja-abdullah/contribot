@@ -15,7 +15,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: state.json
-          key: issue-search
+          key: issue-search-${{ github.run_id }}
+          restore-keys: issue-search-
       - name: Show previous state content
         if: always()
         run: |
@@ -38,4 +39,4 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: state.json
-          key: issue-search
+          key: issue-search-${{ github.run_id }}
