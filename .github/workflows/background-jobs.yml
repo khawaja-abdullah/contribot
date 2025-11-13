@@ -40,3 +40,8 @@ jobs:
         with:
           path: state.json
           key: issue-search-${{ github.run_id }}
+      - name: Show current state content
+        if: always()
+        run: |
+          ls -l state.json || echo "file does not exist yet"
+          cat state.json || true
