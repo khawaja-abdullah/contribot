@@ -33,7 +33,7 @@ jobs:
           ./mvnw spring-boot:run \
           -Dspring-boot.run.arguments="--github.issue-search.job.execution-file=state.json \
                                  --logging.level.org.voninc.contribot.dao.JobExecutionFSRepository=DEBUG"
-      - name: force-save updated state
+      - name: Restore save updated state
         if: always()
         uses: actions/cache/save@v4
         with:
