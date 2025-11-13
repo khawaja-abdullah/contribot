@@ -15,9 +15,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: state.json
-          key: contribot-state-${{ hashFiles('state.json') }}
-          restore-keys: |
-            contribot-state-
+          key: issue-search
       - name: Show previous state content
         if: always()
         run: |
