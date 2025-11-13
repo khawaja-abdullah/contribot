@@ -1,0 +1,29 @@
+name: background-jobs
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  issue-search:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Restore previous state
+        uses: actions/cache@v4
+        with:
+          path: state.json
+          key: contribot-state-${{ hashFiles('issue-search.json') }}
+          restore-keys: |
+            contribot-state-
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
+      - name: Run contribot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: ./mvnw spring-boot:run -Dgh.issue-search.job.execution-file=issue-search.json
