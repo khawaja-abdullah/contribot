@@ -18,6 +18,11 @@ jobs:
           key: contribot-state-${{ hashFiles('state.json') }}
           restore-keys: |
             contribot-state-
+      - name: Show previous state content
+        if: always()
+        run: |
+          ls -l state.json || echo "file does not exist yet"
+          cat state.json || true
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
