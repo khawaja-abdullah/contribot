@@ -15,7 +15,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: state.json
-          key: contribot-state-${{ hashFiles('issue-search.json') }}
+          key: contribot-state-${{ hashFiles('state.json') }}
           restore-keys: |
             contribot-state-
       - uses: actions/setup-java@v4
@@ -28,5 +28,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           ./mvnw spring-boot:run \
-          -Dspring-boot.run.arguments="--github.issue-search.job.execution-file=issue-search.json \
+          -Dspring-boot.run.arguments="--github.issue-search.job.execution-file=state.json \
                                  --logging.level.org.voninc.contribot.dao.JobExecutionFSRepository=DEBUG"

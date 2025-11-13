@@ -12,5 +12,5 @@ github:
         - label:"good first issue"
         - language:Java
     job:
-      execution-file: data/issuesearch/job-execution.json
+      execution-file: data/job/issuesearch/state.json
       initial-lookback-hours: 4
