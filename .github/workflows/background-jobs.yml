@@ -26,4 +26,6 @@ jobs:
       - name: Run contribot
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: ./mvnw spring-boot:run --github.issue-search.job.execution-file=issue-search.json -Dspring-boot.run.arguments="--logging.level.org.voninc.contribot.dao.JobExecutionFSRepository=DEBUG"
+        run: ./mvnw spring-boot:run -- \
+          --github.issue-search.job.execution-file=issue-search.json \
+          --logging.level.org.voninc.contribot.dao.JobExecutionFSRepository=DEBUG
