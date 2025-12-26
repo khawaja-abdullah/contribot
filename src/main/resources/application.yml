@@ -1,6 +1,15 @@
 spring:
   application:
     name: contribot
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: khawaja.abdullah.ansar@gmail.com
+    password: ${SPRING_MAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
 github:
   token: ${GITHUB_TOKEN}
   issue-search:
@@ -14,3 +23,8 @@ github:
     job:
       execution-file: data/job/issuesearch/state.json
       initial-lookback-hours: 4
+      notification:
+        email:
+          sender: noreply@contribot.org
+          recipient: khawaja.abdullah.ansar@gmail.com
+          subject: New GitHub Issues
