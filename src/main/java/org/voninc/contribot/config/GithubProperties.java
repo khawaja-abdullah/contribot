@@ -118,6 +118,26 @@ public class GithubProperties {
        */
       private long initialLookbackHours;
 
+      private Notification notification;
+
+      @Getter
+      @Setter
+      public static class Notification {
+
+        private Email email;
+
+        @Getter
+        @Setter
+        public static class Email {
+
+          private String sender;
+          private String recipient;
+          private String subject;
+
+        }
+
+      }
+
     }
 
   }

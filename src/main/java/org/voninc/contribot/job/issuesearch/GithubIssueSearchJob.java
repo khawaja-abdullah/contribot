@@ -19,17 +19,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.voninc.contribot.config.GithubProperties;
 import org.voninc.contribot.dao.IJobExecutionRepository;
+import org.voninc.contribot.dto.GitIssue;
 import org.voninc.contribot.dto.JobExecution;
 import org.voninc.contribot.exception.ContribotRuntimeException;
 import org.voninc.contribot.job.IJob;
 import org.voninc.contribot.service.IGitProviderService;
-import org.voninc.contribot.config.GithubProperties;
+import org.voninc.contribot.service.GitIssueSearchNotificationOrchestrator;
 import org.voninc.contribot.util.GithubQueryBuilder;
+import org.voninc.contribot.util.NotificationChannelType;
+import org.voninc.contribot.util.NotificationFormatType;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -52,14 +57,17 @@ public class GithubIssueSearchJob implements IJob {
   private final GithubProperties githubProperties;
   private final IJobExecutionRepository jobExecutionRepository;
   private final IGitProviderService gitProviderService;
+  private final GitIssueSearchNotificationOrchestrator gitIssueSearchNotificationOrchestrator;
 
   @Autowired
   public GithubIssueSearchJob(GithubProperties githubProperties,
                               IJobExecutionRepository jobExecutionRepository,
-                              IGitProviderService gitProviderService) {
+                              IGitProviderService gitProviderService,
+                              GitIssueSearchNotificationOrchestrator gitIssueSearchNotificationOrchestrator) {
     this.githubProperties = githubProperties;
     this.jobExecutionRepository = jobExecutionRepository;
     this.gitProviderService = gitProviderService;
+    this.gitIssueSearchNotificationOrchestrator = gitIssueSearchNotificationOrchestrator;
   }
 
   /**
@@ -89,8 +97,18 @@ public class GithubIssueSearchJob implements IJob {
           lastJobExecution.startTime();
       String searchQuery = GithubQueryBuilder.buildIssueSearchQuery(githubProperties, previousRunStartTime);
       LOGGER.info("Github Search Query: {}", searchQuery);
-      // TODO: notification via email with extended API response as message body
-      LOGGER.info("Issues found count: {}", gitProviderService.findIssues(searchQuery).size());
+      List<GitIssue> gitIssues = gitProviderService.findIssues(searchQuery);
+      LOGGER.info("Issues found count: {}", gitIssues.size());
+      if (!gitIssues.isEmpty()) {
+        gitIssueSearchNotificationOrchestrator.sendNotification(
+            NotificationFormatType.PLAINTEXT,
+            NotificationChannelType.EMAIL_SMTP,
+            githubProperties.getIssueSearch().getJob().getNotification().getEmail().getSender(),
+            githubProperties.getIssueSearch().getJob().getNotification().getEmail().getRecipient(),
+            githubProperties.getIssueSearch().getJob().getNotification().getEmail().getSubject(),
+            gitIssues
+        );
+      }
       LocalDateTime currentRunEndTime = LocalDateTime.now(ZoneOffset.UTC);
       JobExecution currentJobExecution = new JobExecution(
           UUID.randomUUID(), currentRunStartTime, currentRunEndTime, Duration.between(currentRunStartTime, currentRunEndTime).toMillis()
