@@ -24,12 +24,32 @@ import org.voninc.contribot.util.NotificationFormatType;
 
 import java.util.List;
 
+/**
+ * Orchestrator that coordinates notification formatting and delivery.
+ *
+ * <p>This component implements the Strategy pattern, maintaining lists of available
+ * formatting and notification strategies. It selects the appropriate strategy implementations
+ * at runtime based on the requested {@link NotificationFormatType} and
+ * {@link NotificationChannelType}.</p>
+ *
+ * <p>The orchestrator decouples notification formatting from delivery, allowing new
+ * formats and channels to be added without modifying existing code.</p>
+ */
 @Component
 public class GitIssueSearchNotificationOrchestrator {
 
   private final List<IGitIssueFormatterStrategy> gitIssueFormatterStrategies;
   private final List<INotificationStrategy> notificationStrategies;
 
+  /**
+   * Creates a new notification orchestrator with available formatting and delivery strategies.
+   *
+   * <p>All strategies are autowired from the Spring application context. Strategies
+   * register themselves by implementing their respective interfaces.</p>
+   *
+   * @param gitIssueFormatterStrategies list of available {@link IGitIssueFormatterStrategy} implementations
+   * @param notificationStrategies      list of available {@link INotificationStrategy} implementations
+   */
   @Autowired
   public GitIssueSearchNotificationOrchestrator(List<IGitIssueFormatterStrategy> gitIssueFormatterStrategies,
                                                 List<INotificationStrategy> notificationStrategies) {
@@ -37,6 +57,26 @@ public class GitIssueSearchNotificationOrchestrator {
     this.notificationStrategies = notificationStrategies;
   }
 
+  /**
+   * Sends a notification with formatted issues using the specified format type and delivery channel.
+   *
+   * <p>This method performs the following steps:</p>
+   * <ol>
+   *   <li>Finds a formatter strategy that supports the requested {@link NotificationFormatType}.</li>
+   *   <li>Formats the issues using the selected strategy.</li>
+   *   <li>Finds a notification strategy that supports the requested {@link NotificationChannelType}.</li>
+   *   <li>Dispatches the formatted message using the selected delivery strategy.</li>
+   * </ol>
+   *
+   * @param notificationFormatType  the desired message format (e.g., {@link NotificationFormatType#PLAINTEXT})
+   * @param notificationChannelType the desired delivery channel (e.g., {@link NotificationChannelType#EMAIL_SMTP})
+   * @param sender                  the sender identifier (e.g., email address or username)
+   * @param recipient               the recipient identifier (e.g., email address or username)
+   * @param subject                 the notification subject or title
+   * @param gitIssues               the list of issues to include in the notification
+   * @throws ContribotRuntimeException if no formatter strategy is found for the requested format type,
+   *                                   or if no notification strategy is found for the requested channel type
+   */
   public void sendNotification(NotificationFormatType notificationFormatType, NotificationChannelType notificationChannelType,
                                String sender, String recipient, String subject, List<GitIssue> gitIssues) {
     String message = gitIssueFormatterStrategies.stream()

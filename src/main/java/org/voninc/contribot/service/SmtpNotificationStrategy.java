@@ -22,10 +22,14 @@ import org.springframework.stereotype.Service;
 import org.voninc.contribot.util.NotificationChannelType;
 
 /**
- * SMTP-based implementation of {@link INotificationStrategy} that sends emails using Spring's {@link JavaMailSender}.
+ * SMTP email notification strategy implementation.
  *
- * <p>This strategy constructs a {@link SimpleMailMessage} with the provided sender, recipient, subject, and message
- * and delegates message delivery to the configured {@link JavaMailSender} instance.</p>
+ * <p>This strategy sends notifications via email using SMTP (Simple Mail Transfer Protocol).
+ * It leverages Spring's {@link JavaMailSender} to send simple text emails with customizable
+ * sender, recipient, subject, and message body.</p>
+ *
+ * <p>This implementation is selected at runtime when {@link NotificationChannelType#EMAIL_SMTP}
+ * is specified in the notification configuration.</p>
  */
 @Service
 public class SmtpNotificationStrategy implements INotificationStrategy {
@@ -33,9 +37,10 @@ public class SmtpNotificationStrategy implements INotificationStrategy {
   private final JavaMailSender javaMailSender;
 
   /**
-   * Creates a new SMTP notification strategy.
+   * Creates a new SMTP notification strategy with the provided mail sender.
    *
-   * @param javaMailSender The mail sender used to dispatch email messages.
+   * @param javaMailSender the Spring {@link JavaMailSender} bean used to send emails;
+   *                       must not be null
    */
   @Autowired
   public SmtpNotificationStrategy(JavaMailSender javaMailSender) {
@@ -43,12 +48,15 @@ public class SmtpNotificationStrategy implements INotificationStrategy {
   }
 
   /**
-   * Sends an email using SMTP with the specified parameters.
+   * Sends an email notification with the specified parameters.
    *
-   * @param sender    The email address of the sender.
-   * @param recipient The email address of the recipient.
-   * @param subject   The email subject.
-   * @param message   The email body text.
+   * <p>This method constructs a {@link SimpleMailMessage}, populates it with the provided
+   * sender, recipient, subject, and message body, and sends it via the configured SMTP server.</p>
+   *
+   * @param sender    the sender email address (should match the SMTP authentication credentials)
+   * @param recipient the recipient email address
+   * @param subject   the email subject line
+   * @param message   the email message body (plain text)
    */
   @Override
   public void dispatch(String sender, String recipient, String subject, String message) {
@@ -61,7 +69,10 @@ public class SmtpNotificationStrategy implements INotificationStrategy {
   }
 
   /**
-   * {@inheritDoc}
+   * Indicates whether this strategy supports EMAIL_SMTP channel.
+   *
+   * @param notificationChannelType The channel type to check
+   * @return true if EMAIL_SMTP, false otherwise
    */
   @Override
   public boolean supports(NotificationChannelType notificationChannelType) {

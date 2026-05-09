@@ -23,11 +23,15 @@ import org.springframework.stereotype.Component;
 import org.voninc.contribot.job.issuesearch.GithubIssueSearchJob;
 
 /**
- * Spring Boot {@link CommandLineRunner} implementation that triggers the execution
- * of the {@link GithubIssueSearchJob} at application startup.
+ * Executes the GitHub issue search job at application startup.
  *
- * <p>This component ensures that the GitHub issue search job runs automatically
- * when the Spring Boot application context is fully initialized.</p>
+ * <p>This component implements Spring's {@link CommandLineRunner} interface and is automatically
+ * invoked by Spring Boot after the application context is fully initialized. It delegates
+ * job execution to the configured {@link GithubIssueSearchJob} instance.</p>
+ *
+ * <p>The job discovery and notification workflow begins immediately after startup, allowing
+ * the application to discover fresh GitHub issues and send notifications without requiring
+ * external triggers or scheduling.</p>
  */
 @Component
 public class JobRunner implements CommandLineRunner {
@@ -36,16 +40,27 @@ public class JobRunner implements CommandLineRunner {
 
   private final GithubIssueSearchJob githubIssueSearchJob;
 
+  /**
+   * Constructs a new JobRunner with the GitHub issue search job dependency.
+   *
+   * @param githubIssueSearchJob the job responsible for discovering and notifying about GitHub issues;
+   *                            must not be null
+   */
   @Autowired
   public JobRunner(GithubIssueSearchJob githubIssueSearchJob) {
     this.githubIssueSearchJob = githubIssueSearchJob;
   }
 
   /**
-   * Invoked by Spring Boot on application startup to run the GitHub issue search job.
+   * Runs the GitHub issue search job.
    *
-   * @param args Command-line arguments passed to the application (ignored by this implementation).
-   * @throws Exception If the job execution fails for any reason.
+   * <p>This method is invoked automatically by Spring Boot at application startup.
+   * It logs the job start and completion, then delegates to the configured
+   * {@link GithubIssueSearchJob#run()} for the actual issue search and notification logic.</p>
+   *
+   * @param args command-line arguments passed to the application (not used by this job)
+   * @throws Exception if job execution fails unexpectedly (though errors are typically handled
+   *                   internally by the job and logged)
    */
   @Override
   public void run(String... args) throws Exception {

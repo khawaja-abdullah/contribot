@@ -15,8 +15,25 @@
  */
 package org.voninc.contribot.util;
 
+/**
+ * Enumeration of supported notification delivery channels.
+ *
+ * <p>This enum defines the available channels through which notifications can be delivered
+ * to users. Each channel is represented by a corresponding {@link org.voninc.contribot.service.INotificationStrategy}
+ * implementation that handles the actual message dispatch.</p>
+ *
+ * <p>New channels can be added by creating a new enum constant and implementing the
+ * corresponding {@link org.voninc.contribot.service.INotificationStrategy} interface.</p>
+ */
 public enum NotificationChannelType {
 
+  /**
+   * Email delivery via Simple Mail Transfer Protocol (SMTP).
+   *
+   * <p>Messages sent via this channel are delivered as email to the specified recipient.
+   * This channel requires SMTP server configuration and valid email addresses.
+   * Implementation: {@link org.voninc.contribot.service.SmtpNotificationStrategy}</p>
+   */
   EMAIL_SMTP
 
 }

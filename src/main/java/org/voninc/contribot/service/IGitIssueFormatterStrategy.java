@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Strategy interface for formatting a list of {@link GitIssue} objects for outbound notifications.
  *
- * <p>Implementations control the presentation (e.g., plaintext, HTML) and are selected at runtime based on
+ * <p>Implementations control the presentation (e.g., plaintext) and are selected at runtime based on
  * {@link NotificationFormatType}.</p>
  */
 public interface IGitIssueFormatterStrategy {

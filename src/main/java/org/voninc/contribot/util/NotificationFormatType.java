@@ -15,9 +15,26 @@
  */
 package org.voninc.contribot.util;
 
+/**
+ * Enumeration of supported notification message formats.
+ *
+ * <p>This enum defines the available formats in which notifications can be presented
+ * to users. Each format is represented by a corresponding {@link org.voninc.contribot.service.IGitIssueFormatterStrategy}
+ * implementation that handles the actual message formatting.</p>
+ *
+ * <p>New formats can be added by creating a new enum constant and implementing the
+ * corresponding {@link org.voninc.contribot.service.IGitIssueFormatterStrategy} interface.</p>
+ */
 public enum NotificationFormatType {
 
-  PLAINTEXT,
-  HTML
+  /**
+   * Plain text format.
+   *
+   * <p>Messages formatted with this type are presented as simple, unformatted text suitable
+   * for email, SMS, or other text-based delivery channels. Each issue is rendered on a
+   * single line with the repository name, issue title, and a direct link.
+   * Implementation: {@link org.voninc.contribot.service.PlainTextGitIssueFormatterStrategy}</p>
+   */
+  PLAINTEXT
 
 }
