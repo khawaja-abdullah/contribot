@@ -44,20 +44,20 @@ public final class GithubQueryBuilder {
    * {@code "label:bug is:open sort:created-desc created:>=2025-11-09T12:00:00"}</p>
    *
    * @param githubProperties Configuration properties containing issue search qualifiers.
-   * @param createdAt The starting point for filtering issues by creation date.
+   * @param createdAt        The starting point for filtering issues by creation date.
    * @return A formatted GitHub issue search query string.
    */
   public static String buildIssueSearchQuery(GithubProperties githubProperties, LocalDateTime createdAt) {
     StringBuilder query = new StringBuilder();
-    githubProperties.getIssueSearch().getQuery().getQualifiers().forEach(
-        qualifier -> {
-          if (!(qualifier.startsWith(Constant.SORT_QUALIFIER_FIELD) || qualifier.startsWith(Constant.CREATED_QUALIFIER_FIELD))) {
-            query.append(qualifier).append(" ");
-          }
-        }
-    );
-    query.append(Constant.SORT_CREATED_DESC)
-        .append(" ")
+    githubProperties.getIssueSearch()
+        .getQuery()
+        .getQualifiers()
+        .stream()
+        .filter(qualifier -> !qualifier.startsWith(Constant.SORT_QUALIFIER_FIELD) &&
+            !qualifier.startsWith(Constant.CREATED_QUALIFIER_FIELD)
+        )
+        .forEach(qualifier -> query.append(qualifier).append(" "));
+    query.append(Constant.SORT_CREATED_DESC).append(" ")
         .append(Constant.CREATED_GTE).append(createdAt);
     return query.toString();
   }

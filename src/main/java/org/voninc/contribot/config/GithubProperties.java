@@ -87,7 +87,9 @@ public class GithubProperties {
 
     /**
      * Defines search qualifiers used to build GitHub issue search queries.
-     * <p>Each qualifier represents a GitHub search filter such as {@code repo:}, {@code is:open}, or {@code label:bug}.</p>
+     *
+     * <p>This nested configuration contains a list of GitHub search filters that are combined
+     * to construct complex, multi-criteria searches for discovering relevant issues.</p>
      */
     @Getter
     @Setter
@@ -95,6 +97,20 @@ public class GithubProperties {
 
       /**
        * A list of qualifiers (filters) used when constructing GitHub issue search queries.
+       *
+       * <p>Each qualifier should follow GitHub's search syntax. Examples include:
+       * <ul>
+       *   <li>{@code is:open} - Include only open issues</li>
+       *   <li>{@code is:issue} - Include only issues (exclude pull requests)</li>
+       *   <li>{@code label:"good first issue"} - Issues labeled as good for newcomers</li>
+       *   <li>{@code language:Java} - Issues from Java repositories</li>
+       *   <li>{@code repo:owner/repository} - Issues from specific repositories</li>
+       *   <li>{@code org:myorg} - Issues from repositories in an organization</li>
+       * </ul>
+       *
+       * <p>Note: Qualifiers starting with {@code sort:} or {@code created:} are automatically filtered
+       * out by {@link org.voninc.contribot.util.GithubQueryBuilder} and replaced with defaults
+       * to ensure consistent sorting and time-based filtering.</p>
        */
       private List<String> qualifiers;
 
@@ -103,6 +119,9 @@ public class GithubProperties {
     /**
      * Defines job-level configuration for scheduled tasks or background processes
      * that interact with the GitHub issue search API.
+     *
+     * <p>This section controls how frequently the job runs, how far back to look for issues,
+     * and how to notify users of discovered issues.</p>
      */
     @Getter
     @Setter
@@ -110,13 +129,85 @@ public class GithubProperties {
 
       /**
        * File path used to load and store the last {@link org.voninc.contribot.dto.JobExecution}.
+       *
+       * <p>The file is stored in JSON format and tracks the start time, end time, and duration
+       * of the previous job execution. This allows subsequent runs to determine the search window.</p>
+       *
+       * <p>Example: {@code data/job/issuesearch/state.json}</p>
        */
       private String executionFile;
       /**
        * The initial time window (in hours) to look back when performing
-       * the first issue search or job execution.
+       * the first issue search or when the execution file does not exist.
+       *
+       * <p>If no previous execution state is found, the job will look back this many hours
+       * from the current time to discover issues. Subsequent runs use the last execution time.</p>
+       *
+       * <p>Example: {@code 4} means look back 4 hours on first run.</p>
        */
       private long initialLookbackHours;
+
+      /**
+       * Email notification configuration for discovered issues.
+       */
+      private Notification notification;
+
+      /**
+       * Email notification settings for issue discovery alerts.
+       *
+       * <p>This configuration determines whether and how email notifications are sent
+       * when GitHub issues matching the search criteria are discovered.</p>
+       */
+      @Getter
+      @Setter
+      public static class Notification {
+
+        /**
+         * Email-specific notification configuration.
+         */
+        private Email email;
+
+        /**
+         * SMTP email configuration for issue discovery notifications.
+         *
+         * <p>These settings control the sender, recipient, and subject line of email
+         * notifications sent when matching issues are discovered.</p>
+         */
+        @Getter
+        @Setter
+        public static class Email {
+
+          /**
+           * The sender email address (must match SMTP authentication credentials).
+           *
+           * <p>This address appears in the "From:" field of sent emails. It should correspond
+           * to the authenticated SMTP user for successful delivery.</p>
+           *
+           * <p>Example: {@code noreply@contribot.org}</p>
+           */
+          private String sender;
+
+          /**
+           * The recipient email address to receive issue discovery notifications.
+           *
+           * <p>Notifications are sent to this email address when matching issues are found.</p>
+           *
+           * <p>Example: {@code developer@example.com}</p>
+           */
+          private String recipient;
+
+          /**
+           * The email subject line for issue discovery notifications.
+           *
+           * <p>This subject appears in the email's "Subject:" field.</p>
+           *
+           * <p>Example: {@code New GitHub Issues Available}</p>
+           */
+          private String subject;
+
+        }
+
+      }
 
     }
 
