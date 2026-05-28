@@ -4,7 +4,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "Friday"
+      day: "friday"
       time: "18:00"
       timezone: "Asia/Karachi"
     open-pull-requests-limit: 5
@@ -36,7 +36,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "Friday"
+      day: "friday"
       time: "19:00"
       timezone: "Asia/Karachi"
     open-pull-requests-limit: 1
