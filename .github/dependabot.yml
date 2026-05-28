@@ -39,7 +39,7 @@ updates:
       day: "Friday"
       time: "19:00"
       timezone: "Asia/Karachi"
-    open-pull-requests-limit: 4
+    open-pull-requests-limit: 1
     reviewers:
       - "khawaja-abdullah"
     commit-message:
@@ -47,3 +47,7 @@ updates:
     labels:
       - "dependencies"
       - "ci"
+    groups:
+      actions:
+        patterns:
+          - "*"
