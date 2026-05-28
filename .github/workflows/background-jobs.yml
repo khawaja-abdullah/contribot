@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v6.0.2
       - name: Restore previous state
-        uses: actions/cache@v5.0.5
+        uses: actions/cache@1bd1e32a3bd045305d15a201b44d32095cc27177 # v5.0.5
         with:
           path: state.json
           key: issue-search-${{ github.run_id }}
@@ -23,7 +23,7 @@ jobs:
           ls -l state.json || echo "file does not exist yet"
           cat state.json || true
       - name: Set up JDK 21
-        uses: actions/setup-java@v5.2.0
+        uses: actions/setup-java@8df1039502715b7463328e27c9d7807187a74790 # v5.2.0
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -38,7 +38,7 @@ jobs:
           -Dspring-boot.run.arguments="--github.issue-search.job.execution-file=state.json"
       - name: Force save updated state
         if: always()
-        uses: actions/cache/save@v5.0.5
+        uses: actions/cache/save@1bd1e32a3bd045305d15a201b44d32095cc27177 # v5.0.5
         with:
           path: state.json
           key: issue-search-${{ github.run_id }}
