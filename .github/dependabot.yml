@@ -4,8 +4,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "sunday"
-      time: "02:00"
+      day: "Friday"
+      time: "18:00"
       timezone: "Asia/Karachi"
     open-pull-requests-limit: 5
     reviewers:
@@ -32,3 +32,18 @@ updates:
         patterns:
           - "org.hibernate:*"
           - "jakarta.persistence:*"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "Friday"
+      time: "19:00"
+      timezone: "Asia/Karachi"
+    open-pull-requests-limit: 4
+    reviewers:
+      - "khawaja-abdullah"
+    commit-message:
+      prefix: "deps(ci)"
+    labels:
+      - "dependencies"
+      - "ci"
