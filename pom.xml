@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.voninc</groupId>
 	<artifactId>contribot</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>contribot</name>
 	<description>GitHub Good-First-Issue notifier bot</description>
 	<url>https://github.com/khawaja-abdullah/contribot</url>
