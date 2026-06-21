@@ -1,6 +1,6 @@
 # Contribot ✨
 
-Contribot is a lightweight Spring Boot utility that helps you discover fresh open-source issues suitable for first-time or quick contributions. It periodically queries GitHub using customizable search qualifiers and tracks the last run so you only see new items.
+Contribot is a Spring Boot utility that helps you discover fresh open-source issues suitable for first-time or quick contributions. It periodically queries GitHub using customizable search qualifiers and tracks the last run so you only see new items.
 
 ## Highlights 🔎
 - 🔍 Discover new GitHub issues using rich, composable search qualifiers
